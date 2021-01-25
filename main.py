@@ -16,6 +16,7 @@ transformed_list = []
 if img_file:
     col_ori, col_res = st.beta_columns(2)
     img = Image.open(img_file)
+    res = img.copy()
     image = np.asarray(img)
     for op in options:
         if op == "CLAHE":
@@ -24,8 +25,8 @@ if img_file:
             transform = A.Compose(transformed_list)
             transformed = transform(image=image)
             transformed_image = transformed["image"]
-            cv2.threshold(transformed_image, 128, 255)
-            res = Image.fromarray(transformed_image)
+            _, transformed_image = cv2.threshold(transformed_image, 128, 255, cv2.THRESH_BINARY)
+            transformed_image = Image.fromarray(transformed_image)
 
     transform = A.Compose(transformed_list)
     transformed = transform(image=image)
